@@ -1,19 +1,22 @@
-<template>
-  <div>
-    <demo />
-  </div>
-</template>
 <script>
-import demo from '../antdv-demo/docs/mentions/demo/form';
+import Button from '../components/button';
+import Space from '../components/space';
+import '../components/button/style';
+import '../components/space/style';
 export default {
-  components: {
-    demo,
-  },
   data() {
     return {
       visible: true,
       current: ['mail'],
     };
+  },
+  render() {
+    return (
+      <Space size="small">
+        <Button>1234</Button>
+        <Button>43</Button>
+      </Space>
+    );
   },
 };
 </script>
