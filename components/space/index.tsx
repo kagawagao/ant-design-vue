@@ -1,7 +1,17 @@
-import { inject } from 'vue';
+import { inject, defineComponent, CSSProperties } from 'vue';
 import PropTypes from '../_util/vue-types';
-import { filterEmpty, initDefaultProps } from '../_util/props-util';
+import { filterEmpty } from '../_util/props-util';
 import { ConfigConsumerProps } from '../config-provider';
+
+export interface SpaceProps {
+  prefixCls?: string;
+  class?: any;
+  style?: CSSProperties | string;
+  size?: number;
+  direction?: 'horizontal' | 'vertical';
+  // No `stretch` since many components do not support that.
+  align?: 'start' | 'end' | 'center' | 'baseline';
+}
 
 export const SpaceSizeType = PropTypes.oneOfType([
   PropTypes.number,
@@ -14,20 +24,20 @@ const spaceSize = {
   large: 24,
 };
 
-export const SpaceProps = {
-  prefixCls: PropTypes.string,
-  size: SpaceSizeType,
-  direction: PropTypes.oneOf(['horizontal', 'vertical']),
-  align: PropTypes.oneOf(['start', 'end', 'center', 'baseline']),
-};
+// export const SpaceProps = {
+//   prefixCls: PropTypes.string,
+//   size: SpaceSizeType,
+//   direction: PropTypes.oneOf(['horizontal', 'vertical']),
+//   align: PropTypes.oneOf(['start', 'end', 'center', 'baseline']),
+// };
 
-const ASpace = (props, { slots }) => {
+const ASpace = defineComponent<SpaceProps, any>((props, { slots }) => {
   const configProvider = inject('configProvider', ConfigConsumerProps);
   const { align, size, direction, prefixCls: customizePrefixCls } = props;
 
   const getPrefixCls = configProvider.getPrefixCls;
   const prefixCls = getPrefixCls('space', customizePrefixCls);
-  const items = filterEmpty(slots.default && slots.default());
+  const items = filterEmpty(slots.default?.());
   const len = items.length;
 
   if (len === 0) {
@@ -66,14 +76,6 @@ const ASpace = (props, { slots }) => {
       ))}
     </div>
   );
-};
-ASpace.props = initDefaultProps(SpaceProps, {
-  size: 'small',
-  direction: 'horizontal',
 });
 
-/* istanbul ignore next */
-ASpace.install = function(app) {
-  app.component(ASpace.name, ASpace);
-};
 export default ASpace;
